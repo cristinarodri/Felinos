@@ -59,4 +59,26 @@ felinos %>%
     )
     )
 ```
+#Gráfico
+```{r grafico-felinos, message=FALSE, echo=FALSE}
+grafico_barras <-
+felinos %>%
+  ggplot(aes(x = species)) +
+  geom_bar()
+
+ggplotly(grafico_barras)
+```
+
+# Mapa
+```{r mapa-felinos, message=FALSE, echo=FALSE}
+leaflet() %>%
+  addTiles() %>%
+  addCircleMarkers(
+    data = felinos,
+    stroke = F,
+    radius = 4,
+    fillColor = 'blue',
+    fillOpacity = 1
+  )
+```
 
