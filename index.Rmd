@@ -35,13 +35,28 @@ felinos <-
 ```
 
 # Tabla
-```{r}
+```{r tabla-felinos, echo=FALSE}
 # Visualización de datos de felinos en formato tabular
 felinos %>%
-  dplyr::select(species, eventDate, stateProvince, locality, decimalLongitude, decimalLatitude) %>%
-  datatable(options = list(
-    pageLenght = 5,
+  dplyr::select(species, 
+                eventDate, 
+                stateProvince, 
+                locality, 
+                decimalLongitude, 
+                decimalLatitude) %>%
+  st_drop_geometry() %>%
+  datatable(colnames = c(
+      "Especie",
+      "Fecha",
+      "Provincia",
+      "Localidad",
+      "Longitud",
+      "Latitud"
+    ),
+    options = list(
+      pageLength = 10,
     languaje = list(url = '//cdn.datatables.net/plus-ins/1.10.11/i18n/Spanish.json')
-  ))
+    )
+    )
 ```
 
