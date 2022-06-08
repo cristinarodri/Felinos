@@ -1,0 +1,47 @@
+---
+title: "Datos de felinos en Costa Rica"
+author: "Cristina Rodríguez"
+date: '2022-06-08'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Preparativos
+```{r carga-paquetes, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(sf)
+library(DT)
+library(leaflet)
+```
+
+
+```{r}
+# Lectura de un archivo csv con registros de presencia de fallecidos en Costa Rica
+felinos <-
+  st_read(
+    "felinos.csv",
+    options = c (
+      "X_POSSIBLE_NAMES=decimalLongitude", # columna de longitud decimal
+      "Y_POSSIBLE_NAMES=decimalLatitude" #Columna de latitud decimal
+    ),
+    quiet = TRUE
+  )
+
+```
+
+# Tabla
+```{r}
+# Visualización de datos de felinos en formato tabular
+felinos %>%
+  dplyr::select(species, eventDate, stateProvince, locality, decimalLongitude, decimalLatitude) %>%
+  datatable(options = list(
+    pageLenght = 5,
+    languaje = list(url = '//cdn.datatables.net/plus-ins/1.10.11/i18n/Spanish.json')
+  ))
+```
+
