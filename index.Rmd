@@ -102,13 +102,13 @@ ggplotly(grafico_barras)
 ```{r mapa-felinos-provincias, message=FALSE, echo=FALSE}
 leaflet() %>%
   addTiles() %>%
-  addPolygons(
-    data = provincias,
-    color = "black",
-    fillColor = "transparent",
-    stroke = TRUE,
-    weight = 1.0,
-  ) %>%
+  # addPolygons(
+  #   data = provincias,
+  #   color = "black",
+  #   fillColor = "transparent",
+  #   stroke = TRUE,
+  #   weight = 1.0,
+  # ) %>%
   addCircleMarkers(
     data = felinos,
     stroke = F,
