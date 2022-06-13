@@ -2,14 +2,21 @@
 title: "Datos de felinos en Costa Rica"
 author: "Cristina Rodríguez"
 date: '2022-06-08'
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 5
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Preparativos
+# Preparativos
 ```{r carga-paquetes, message=FALSE}
 library(dplyr)
 library(ggplot2)
@@ -17,14 +24,15 @@ library(plotly)
 library(sf)
 library(DT)
 library(leaflet)
+library(raster)
 ```
 
 
-```{r}
+```{r carga_datos}
 # Lectura de un archivo csv con registros de presencia de fallecidos en Costa Rica
 felinos <-
   st_read(
-    "felinos.csv",
+    "C:/Users/gf0604-1/Mapas en R/Felinos/felinos.csv", # archivo de datos de entrada
     options = c (
       "X_POSSIBLE_NAMES=decimalLongitude", # columna de longitud decimal
       "Y_POSSIBLE_NAMES=decimalLatitude" #Columna de latitud decimal
@@ -33,6 +41,17 @@ felinos <-
   )
 
 ```
+
+```{r carga_datos_provincias}
+provincias <-
+  st_read(
+    "C:/Users/gf0604-1/Mapas en R/Felinos/provincias.geojson", # archivo de datos de entrada
+    quiet = TRUE
+  ) %>%
+  st_transform(4326)
+
+```
+
 
 # Tabla
 ```{r tabla-felinos, echo=FALSE}
@@ -59,25 +78,42 @@ felinos %>%
     )
     )
 ```
-#Gráfico
+# Gráfico
 ```{r grafico-felinos, message=FALSE, echo=FALSE}
 grafico_barras <-
 felinos %>%
-  ggplot(aes(x = species)) +
-  geom_bar()
+  count(species) %>%
+  ggplot(aes(x = reorder(species, n), y = n)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Cantidad de Felinos") +
+  xlab ("Cantidad") +
+  ylab ("Felinos") +
+  coord_flip() + #cambiar ejes
+  theme_minimal()
+
 
 ggplotly(grafico_barras)
 ```
 
+
+
 # Mapa
-```{r mapa-felinos, message=FALSE, echo=FALSE}
+
+```{r mapa-felinos-provincias, message=FALSE, echo=FALSE}
 leaflet() %>%
   addTiles() %>%
+  addPolygons(
+    data = provincias,
+    color = "black",
+    fillColor = "transparent",
+    stroke = TRUE,
+    weight = 1.0,
+  ) %>%
   addCircleMarkers(
     data = felinos,
     stroke = F,
     radius = 4,
-    fillColor = 'blue',
+    fillColor = "blue",
     fillOpacity = 1
   )
 ```
